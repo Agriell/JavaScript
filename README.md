@@ -1,1 +1,1 @@
-# JavaScript homeworks
+# Netology JavaScript (diplom)
