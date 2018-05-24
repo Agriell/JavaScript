@@ -134,7 +134,21 @@ class Level {
 			
 		}
 	}
+	removeActor(object) {
+		if (object instanceof Actor) {
+			if (~this.actors.indexOf(object)) {
+				this.actors.findIndex(
+					function(elem, index, array) {
+						if (elem === object) {
+							array.splice(index, 1)
+						}
+					})
+			}
 
+		} else {
+			throw new Error('Принимает только объект типа Actor')
+		}
+	}
 
 }
 
