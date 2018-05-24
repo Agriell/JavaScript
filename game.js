@@ -135,26 +135,41 @@ class Level {
 		}
 	}
 	removeActor(object) {
-		if (object instanceof Actor) {
-			if (~this.actors.indexOf(object)) {
-				this.actors.findIndex(
-					function(elem, index, array) {
-						if (elem === object) {
-							array.splice(index, 1)
-						}
-					})
-			}
-
-		} else {
-			throw new Error('Принимает только объект типа Actor')
+		if (~this.actors.indexOf(object)) {
+			this.actors.findIndex(
+				function(elem, index, array) {
+					if (elem === object) {
+						array.splice(index, 1)
+					}
+				})
 		}
 	}
+	noMoreActors(type) {
+		if (this.actors.length == 0) return true;
+		if (this.actors.find(
+				elem => elem['type'] === type
+			)) {return false}
+		else return true
+	}
 
+
+
+
+	playerTouched(type, object) {
+		if (this.status !== 'null') {
+			if (  
+				type === 'lava' || 
+				type === 'fireball') {
+					this.status = 'lost';
+			} else if (type === 'coin' && object) {
+				this.removeActor(object)
+				if (this.noMoreActors('coin')) {
+					this.status = 'won'
+				}
+			}
+		}
+	}
 }
-
-
-
-
 
 
 
