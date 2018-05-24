@@ -48,6 +48,12 @@ class Actor {
 		if (object instanceof Actor) {
 			if (object === this) {return false}
 			else if (
+				object.left == this.left &&
+				object.right == this.right &&
+				object.top == this.top &&
+				object.bottom == this.bottom
+				) {return true}
+			else if (
 				object.left == this.right ||
 				object.right == this.left ||
 				object.top == this.bottom ||
@@ -91,16 +97,49 @@ class Level {
 			this.grid = 0
 		}
 	}
+	isFinished() {
+		if (this.status !== null && this.finishDelay < 0) {
+			return true;
+		} else {return false}
+	}
+	actorAt (object) {
+		if (object instanceof Actor) {
+			return this.actors.find(elem => elem.isIntersect(object))
+		} else {
+			throw new Error('Принимает только объекты класса Actor.')
+		}
+	}
 
 }
 
+const items = new Map();
+const player = new Actor();
+items.set('Игрок', player);
+items.set('Первая монета', new Actor(new Vector(10, 10)));
+items.set('Вторая монета', new Actor(new Vector(15, 5)));
 
+function position(item) {
+  return ['left', 'top', 'right', 'bottom']
+    .map(side => `${side}: ${item[side]}`)
+    .join(', ');  
+}
 
+function movePlayer(x, y) {
+  player.pos = player.pos.plus(new Vector(x, y));
+}
 
+function status(item, title) {
+  console.log(`${title}: ${position(item)}`);
+  if (player.isIntersect(item)) {
+    console.log(`Игрок подобрал ${title}`);
+  }
+}
 
-
-
-
+items.forEach(status);
+movePlayer(10, 10);
+items.forEach(status);
+movePlayer(5, -5);
+items.forEach(status);
 
 
 
