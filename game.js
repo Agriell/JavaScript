@@ -94,7 +94,7 @@ class Level {
   				}, 0)
 		} else {
 			this.width = 0
-			this.grid = 0
+			this.height = 0
 		}
 	}
 	isFinished() {
@@ -109,44 +109,34 @@ class Level {
 			throw new Error('Принимает только объекты класса Actor.')
 		}
 	}
+	obstacleAt(position, size) {
+		if (!(position instanceof Vector ||
+			 size instanceof Vector)) {
+			throw new Error('Принимает только объекты класса Vector.')
+		} else {
+			if (
+				position.x < 0 ||
+				position.y < 0 ||
+				position.x + size.x > this.width) {
+				return 'wall'
+			}
+			else if (
+				position.y + size.y > this.height) {
+				return 'lava'
+			}
+			else {
+				for (let i = Math.floor(position.x); i <= Math.floor(position.x + size.x); i++) {
+					for (let j = Math.floor(position.y); j <= Math.floor(position.y + size.y); j++) {
+						return this.grid[i][j]
+					}
+				}
+			}
+			
+		}
+	}
+
 
 }
-
-const items = new Map();
-const player = new Actor();
-items.set('Игрок', player);
-items.set('Первая монета', new Actor(new Vector(10, 10)));
-items.set('Вторая монета', new Actor(new Vector(15, 5)));
-
-function position(item) {
-  return ['left', 'top', 'right', 'bottom']
-    .map(side => `${side}: ${item[side]}`)
-    .join(', ');  
-}
-
-function movePlayer(x, y) {
-  player.pos = player.pos.plus(new Vector(x, y));
-}
-
-function status(item, title) {
-  console.log(`${title}: ${position(item)}`);
-  if (player.isIntersect(item)) {
-    console.log(`Игрок подобрал ${title}`);
-  }
-}
-
-items.forEach(status);
-movePlayer(10, 10);
-items.forEach(status);
-movePlayer(5, -5);
-items.forEach(status);
-
-
-
-
-
-
-
 
 
 
