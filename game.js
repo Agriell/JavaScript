@@ -216,12 +216,11 @@ class LevelParser {
 		return actorsArr;
 	}
 	parse(arrayStr) {
-
+		const gridObj = this.createGrid(arrayStr),
+			  gridAct = this.createActors(arrayStr);
+		return new Level(gridObj, gridAct)
 	}
 }
-
-
-
 
 
 
