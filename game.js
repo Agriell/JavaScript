@@ -125,9 +125,9 @@ class Level {
 				return 'lava'
 			}
 			else {
-				for (let i = Math.floor(position.x); i <= Math.floor(position.x + size.x); i++) {
-					for (let j = Math.floor(position.y); j <= Math.floor(position.y + size.y); j++) {
-						return this.grid[i][j]
+				for (let i = Math.floor(position.y); i < Math.ceil(position.y + size.y); i++) {
+					for (let j = Math.floor(position.x); j < Math.ceil(position.x + size.x); j++) {
+						if(this.grid[i][j]) return this.grid[i][j]
 					}
 				}
 			}
@@ -151,10 +151,6 @@ class Level {
 			)) {return false}
 		else return true
 	}
-
-
-
-
 	playerTouched(type, object) {
 		if (this.status !== 'null') {
 			if (  
@@ -170,6 +166,74 @@ class Level {
 		}
 	}
 }
+
+class LevelParser {
+	constructor(vocab) {
+		this.vocab = vocab;
+	}
+	actorFromSymbol(symbol) {
+		if (symbol) {
+			if (symbol in this.vocab) {
+				return this.vocab[symbol]
+			} else return undefined
+		} else return undefined
+	}
+	obstacleFromSymbol(symbol) {
+		if (symbol === 'x') return 'wall'
+		else if (symbol === '!') return 'lava'
+		else return undefined
+	}
+	createGrid(plan) {
+		if (plan.length == 0) {return []};
+		let grid = [];
+		for (let i = 0; i < plan.length; i++) {
+			let gridString = [];
+			for (let j = 0; j < plan[i].length; j++) {
+				gridString.push(this.obstacleFromSymbol(plan[i][j]));
+			}
+			grid.push(gridString);
+		}
+		return grid;
+	}
+	createActors(actorsList) {
+		const actorsArr = [];
+		if (actorsList.length === 0) return actorsArr;
+		if (!this.vocab) {return actorsArr};
+		actorsList.forEach((value, index, array) => {
+				for (let i = 0; i < value.length; i++) {
+					if (typeof this.vocab[value[i]] === 'function')	{
+						let Elem = Object(this.vocab[value[i]]),
+						// let Elem = Object(this.actorFromSymbol(value[i])),
+						
+							actor = new Elem(new Vector(i, index))
+						if (actor instanceof Actor) {
+							actorsArr.push(actor)	
+							// actorsArr.push(new actorFromSymbol(value[i])(new Vector(i, index)))
+						}
+					}
+				}
+			})
+		return actorsArr;
+	}
+	parse(arrayStr) {
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
