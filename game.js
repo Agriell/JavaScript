@@ -222,10 +222,33 @@ class LevelParser {
 	}
 }
 
+class Fireball extends Actor {
+	constructor(
+		pos = new Vector(0, 0),
+		speed = new Vector(0, 0)) {
+			super(pos);
+			this.speed = speed;
+			this.size = new Vector(1, 1);
+	}
+	get type() {return 'fireball'};
 
+	getNextPosition(time = 1) {
+		let newPos = new Vector(this.pos.x, this.pos.y);
+		return newPos.plus(this.speed.times(time))
+	}
 
-
-
+	handleObstacle() {
+		this.speed = this.speed.times(-1)
+	}
+	act(time, playField) {
+		const nextPosition = this.getNextPosition(time);
+		if (!playField.obstacleAt(nextPosition, this.size)) {
+			this.pos = nextPosition
+		} else {
+			this.handleObstacle()
+		}
+	}
+}
 
 
 
