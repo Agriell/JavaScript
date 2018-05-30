@@ -21,7 +21,6 @@ class Vector {
 		)}
 }
 
-
 class Actor {
 	constructor(
 		pos = new Vector(0, 0),
@@ -275,6 +274,41 @@ class FireRain extends Fireball {
 	}
 	handleObstacle() {
 		this.pos = this.startPos
+	}
+}
+
+class Coin extends Actor {
+	constructor(pos) {
+		super(pos);
+		this.basePos = this.pos;
+		this.pos = this.pos.plus(new Vector(0.2, 0.1));
+		this.size = new Vector(0.6, 0.6);
+		this.springSpeed = 8;
+		this.springDist = 0.07;
+		this.spring = Math.random() * Math.PI * 2; 
+	}
+	
+	get type() {
+		return 'coin';
+	}
+	
+	updateSpring(time = 1) {
+		this.spring += this.springSpeed * time;
+	}
+	
+	getSpringVector() {
+		return new Vector(0, this.springDist * Math.sin(this.spring));
+	}
+
+	getNextPosition(time = 1) {
+		this.updateSpring(time);
+		return this.basePos
+					.plus(this.getSpringVector())
+					.plus(new Vector(0.2, 0.1));
+	}
+
+	act (time) {
+		this.pos = this.getNextPosition(time);
 	}
 }
 
