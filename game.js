@@ -41,30 +41,16 @@ class Actor {
 	get top() {return this.pos.y;}
 	get right() {return this.pos.x + this.size.x;}
 	get bottom() {return this.pos.y + this.size.y;}
-	get type() {return 'actor';}
+	get type() {return 'actor'}
 	
 	isIntersect(object) {
 		if (object instanceof Actor) {
 			if (object === this) {return false}
-			else if (
-				object.left == this.left &&
-				object.right == this.right &&
-				object.top == this.top &&
-				object.bottom == this.bottom
-				) {return true}
-			else if (
-				object.left == this.right ||
-				object.right == this.left ||
-				object.top == this.bottom ||
-				object.bottom == this.top
-			) {return false}
-			else if (
-				object.left < this.right && object.left > this.left ||
-				object.right > this.left && object.right < this.right ||
-				object.top < this.bottom && object.top > this.top ||
-				object.bottom > this.top && object.bottom < this.bottom
-			) {return true}
-			else {return false}
+			else if (object.left >= this.right) {return false}
+			else if (object.right <= this.left) {return false}
+			else if (object.top >= this.bottom) {return false}
+			else if (object.bottom <= this.top) {return false}
+			else {return true}
 		} else {
 			throw new Error('Может принимать только объекты типа Actor.');
 		}
@@ -312,12 +298,54 @@ class Coin extends Actor {
 	}
 }
 
+class Player extends Actor {
+	constructor(pos) {
+		super(pos);
+		this.basePos = this.pos;
+		this.pos = this.pos.plus(new Vector(0, -0.5));
+		this.size = new Vector(0.8, 1.5);
+		this.speed = new Vector(0, 0);
+	}
+
+	get type() {
+		return 'player';
+	}
+}
 
 
+const schemas = [
+  [
+    '                           ',
+    '              o          o ',
+    '          v        | xxxxx ',
+    '       o   xxxxxx          ',
+    '      xxx             x    ',
+    ' @o    x    =              ',
+    'xxx!             xxxxx     ',
+    '                           '
+  ],
+  [
+    '      v  ',
+    '    o    ',
+    '  v     o',
+    '        x',
+    '         ',
+    '@   x   o',
+    'x       x',
+    '         '
+  ]
+];
+const actorDict = {
+  '@': Player,
+  'v': FireRain,
+  'o': Coin,
+  '=': HorizontalFireball,
+  '|': VerticalFireball
 
-
-
-
+}
+const parser = new LevelParser(actorDict);
+runGame(schemas, parser, DOMDisplay)
+  .then(() => console.log('Вы выиграли приз!'));
 
 
 
