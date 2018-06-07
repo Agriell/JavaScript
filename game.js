@@ -102,16 +102,9 @@ class Level {
 		this.status = null;
 		this.finishDelay = 1;
 		
-		if (this.grid !== []) {
+		if (this.grid.length) {
 			this.height = this.grid.length;
-			this.width = this.grid.map(item => item.length)
-				.reduce(function(prev, cur) {
-      		if (cur > prev) {
-      			return cur
-      		}	else {
-      			return prev
-      		}
-  			}, 0);
+			this.width = Math.max.apply(null, this.grid.map(item => item.length));
 		} else {
 			this.width = 0;
 			this.height = 0;
@@ -154,8 +147,9 @@ class Level {
 					for (let j = Math.floor(position.x);
 							 j < Math.ceil(position.x + size.x);
 							 j++) {
-						if(this.grid[i][j]) {
-							return this.grid[i][j]
+						let node = this.grid[i][j];
+						if(node) {
+							return node
 						}
 					}
 				}
@@ -164,7 +158,7 @@ class Level {
 	}
 
 	removeActor(object) {
-		if (~this.actors.indexOf(object)) {
+		if (this.actors.indexOf(object) !== -1) {
 			this.actors.findIndex(function(elem, index, array) {
 				if (elem === object) {
 					array.splice(index, 1)
@@ -232,10 +226,10 @@ class LevelParser {
 			return []
 		};
 		let grid = [];
-		for (let i = 0; i < plan.length; i++) {
+		for (let str of plan) {
 			let gridString = [];
-			for (let j = 0; j < plan[i].length; j++) {
-				gridString.push(this.obstacleFromSymbol(plan[i][j]));
+			for (let sym of str) {
+				gridString.push(this.obstacleFromSymbol(sym));
 			}
 			grid.push(gridString);
 		}
@@ -250,7 +244,8 @@ class LevelParser {
 		if (!this.vocab) {
 			return actorsArr
 		};
-		actorsList.forEach((value, index, array) => {
+
+		actorsList.forEach((value, index) => {
 			for (let i = 0; i < value.length; i++) {
 				if (typeof this.vocab[value[i]] === 'function')	{
 					let Elem = Object(this.vocab[value[i]]);
@@ -362,7 +357,7 @@ class Coin extends Actor {
 					.plus(new Vector(0.2, 0.1));
 	}
 
-	act (time) {
+	act(time) {
 		this.pos = this.getNextPosition(time);
 	}
 }
@@ -382,28 +377,29 @@ class Player extends Actor {
 }
 
 
-const schemas = [
-  [
-    '                           ',
-    '              o          o ',
-    '          v        | xxxxx ',
-    '       o   xxxxxx          ',
-    '      xxx             x    ',
-    ' @o    x    =              ',
-    'xxx!             xxxxx     ',
-    '                           '
-  ],
-  [
-    '      v  ',
-    '    o    ',
-    '  v     o',
-    '        x',
-    '         ',
-    '@   x   o',
-    'x       x',
-    '         '
-  ]
-];
+// const schemas = [
+//   [
+//     '                           ',
+//     '              o          o ',
+//     '          v        | xxxxx ',
+//     '       o   xxxxxx          ',
+//     '      xxx             x    ',
+//     ' @o    x    =              ',
+//     'xxx!             xxxxx     ',
+//     '                           '
+//   ],
+//   [
+//     '      v  ',
+//     '    o    ',
+//     '  v     o',
+//     '        x',
+//     '         ',
+//     '@   x   o',
+//     'x       x',
+//     '         '
+//   ]
+// ];
+
 const actorDict = {
   '@': Player,
   'v': FireRain,
@@ -413,9 +409,13 @@ const actorDict = {
 
 }
 const parser = new LevelParser(actorDict);
-runGame(schemas, parser, DOMDisplay)
-  .then(() => console.log('Вы выиграли приз!'));
 
+loadLevels()
+	.then((res) => JSON.parse(res))
+	.then((result) => {
+		runGame(result, parser, DOMDisplay)
+  .then(() => console.log('Вы выиграли приз!'));
+})
 
 
 
