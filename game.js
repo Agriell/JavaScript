@@ -414,7 +414,7 @@ loadLevels()
 	.then((res) => JSON.parse(res))
 	.then((result) => {
 		runGame(result, parser, DOMDisplay)
-  .then(() => console.log('Вы выиграли приз!'));
+  .then(() => alert('Вы выиграли! УРА!'));
 });
 
 
