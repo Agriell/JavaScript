@@ -307,6 +307,7 @@ class HorizontalFireball extends Fireball {
 	}
 }
 
+
 class VerticalFireball extends Fireball {
 	constructor(pos) {
 	  super(pos);
@@ -314,6 +315,7 @@ class VerticalFireball extends Fireball {
 	  this.speed = new Vector(0, 2);
 	}
 }
+
 
 class FireRain extends Fireball {
 	constructor(pos) {
@@ -326,6 +328,7 @@ class FireRain extends Fireball {
 		this.pos = this.startPos;
 	}
 }
+
 
 class Coin extends Actor {
 	constructor(pos) {
@@ -362,6 +365,7 @@ class Coin extends Actor {
 	}
 }
 
+
 class Player extends Actor {
 	constructor(pos) {
 		super(pos);
@@ -375,6 +379,7 @@ class Player extends Actor {
 		return 'player';
 	}
 }
+
 
 const actorDict = {
   '@': Player,
