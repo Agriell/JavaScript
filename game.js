@@ -376,30 +376,6 @@ class Player extends Actor {
 	}
 }
 
-
-// const schemas = [
-//   [
-//     '                           ',
-//     '              o          o ',
-//     '          v        | xxxxx ',
-//     '       o   xxxxxx          ',
-//     '      xxx             x    ',
-//     ' @o    x    =              ',
-//     'xxx!             xxxxx     ',
-//     '                           '
-//   ],
-//   [
-//     '      v  ',
-//     '    o    ',
-//     '  v     o',
-//     '        x',
-//     '         ',
-//     '@   x   o',
-//     'x       x',
-//     '         '
-//   ]
-// ];
-
 const actorDict = {
   '@': Player,
   'v': FireRain,
@@ -416,16 +392,3 @@ loadLevels()
 		runGame(result, parser, DOMDisplay)
   .then(() => alert('Вы выиграли! УРА!'));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
